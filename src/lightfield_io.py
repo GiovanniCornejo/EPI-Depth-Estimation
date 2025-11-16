@@ -10,13 +10,12 @@ def load_hci_lightfield(scene_path, U=9, V=9):
     Returns:
         lf: numpy array of shape (H, W, U, V, C)
     """
-    lf = None
-
     # Load all input_Cam### images
     files = sorted(glob(os.path.join(scene_path, "input_Cam*.png")))
-    
     if len(files) != U * V:
         raise ValueError(f"Expected {U*V} images, found {len(files)} instead.")
+    
+    lf = None
 
     # Loop through the angular grid
     for idx, filename in enumerate(files):
@@ -33,4 +32,5 @@ def load_hci_lightfield(scene_path, U=9, V=9):
         # Save image into proper location
         lf[:, :, u, v, :] = img
 
+    assert lf is not None
     return lf
