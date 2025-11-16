@@ -4,65 +4,85 @@
 
 def extract_horizontal_epi(lf, y, v):
     """
-    Extracts a horizontal (x-u) EPI.
+    Extract a single horizontal (x-u) EPI from a 4D light field.
+
+    A horizontal EPI is a 2D slice where the horizontal spatial dimension (x)
+    and horizontal angular dimension (u) vary, while the row y and vertical 
+    angular index v are fixed.
 
     Parameters
     ----------
-    lf : numpy array of shape (H, W, U, V, C)
-    y  : int, spatial row index
-    v  : int, angular v index (vertical viewpoint)
+    lf : ndarray, shape (H, W, U, V, C)
+        Input light field
+    y : int
+        Spatial row index to fix
+    v : int
+        Vertical angular index to fix
 
     Returns
     -------
-    epi : numpy array of shape (W, U, C)
+    epi : ndarray, shape (W, U, C)
+        Extracted horizontal EPI
     """
-    # lf[x, y, u, v, c] => we fix y, v and vary x, u
     H, _, _, V, _ = lf.shape
     if y < 0 or y >= H:
-        raise ValueError("Invalid y index")
+        raise ValueError(f"Invalid y index: {y}")
     if v < 0 or v >= V:
-        raise ValueError("Invalid v index")
+        raise ValueError(f"Invalid vertical angular index: {v}")
     
-    # Extract: all x, all u, fixed y, fixed v
-    # shape: (W, U, C)
-    epi = lf[y, :, :, v, :]  # shape (W, U, C)
+    # Slice all x (columns) and u (horizontal views)
+    epi = lf[y, :, :, v, :]  # shape: (W, U, C)
     return epi
 
 
 def extract_vertical_epi(lf, x, u):
     """
-    Extracts a vertical (y-v) EPI.
+    Extract a single vertical (y-v) EPI from a 4D light field.
+
+    A vertical EPI is a 2D slice where the vertical spatial dimension (y)
+    and vertical angular dimension (v) vary, while the column x and horizontal
+    angular index u are fixed.
 
     Parameters
     ----------
-    lf : numpy array (H, W, U, V, C)
-    x  : int, spatial column index
-    u  : int, angular u index (horizontal viewpoint)
+    lf : ndarray, shape (H, W, U, V, C)
+        Input light field
+    x : int
+        Spatial column index to fix
+    u : int
+        Horizontal angular index to fix
 
     Returns
     -------
-    epi : numpy array of shape (H, V, C)
+    epi : ndarray, shape (H, V, C)
+        Extracted vertical EPI
     """
     _, W, U, _, _ = lf.shape
     if x < 0 or x >= W:
-        raise ValueError("Invalid x index")
+        raise ValueError(f"Invalid x index: {x}")
     if u < 0 or u >= U:
-        raise ValueError("Invalid u index")
-
-    # Extract: all y, all v, fixed x, fixed u
-    # shape: (H, V, C)
-    epi = lf[:, x, u, :, :]  # shape (H, V, C)
+        raise ValueError(f"Invalid horizontal angular index: {u}")
+    
+    # Slice all y (rows) and v (vertical views)
+    epi = lf[:, x, u, :, :]  # shape: (H, V, C)
     return epi
 
 
 def extract_all_horizontal_epis(lf, v):
     """
-    Extracts all horizontal EPIs for a given angular index v.
+    Extract all horizontal EPIs for a given vertical angular index.
+
+    Parameters
+    ----------
+    lf : ndarray, shape (H, W, U, V, C)
+        Input light field
+    v : int
+        Vertical angular index to fix
 
     Returns
     -------
-    epis : list of arrays, length H
-        Each element has shape (W, U, C)
+    epis : list of ndarray
+        Length H, each element is a horizontal EPI of shape (W, U, C)
     """
     H, _, _, _, _ = lf.shape
     return [extract_horizontal_epi(lf, y, v) for y in range(H)]
@@ -70,16 +90,22 @@ def extract_all_horizontal_epis(lf, v):
 
 def extract_all_vertical_epis(lf, u):
     """
-    Extracts all vertical EPIs for a given angular index u.
+    Extract all vertical EPIs for a given horizontal angular index.
+
+    Parameters
+    ----------
+    lf : ndarray, shape (H, W, U, V, C)
+        Input light field
+    u : int
+        Horizontal angular index to fix
 
     Returns
     -------
-    epis : list of arrays, length W
-        Each element has shape (H, V, C)
+    epis : list of ndarray
+        Length W, each element is a vertical EPI of shape (H, V, C)
     """
     _, W, _, _, _ = lf.shape
     return [extract_vertical_epi(lf, x, u) for x in range(W)]
-
 
 # ---------------------------------------------------------------------------- #
 #                                KLD Computation                               #
