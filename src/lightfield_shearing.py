@@ -51,43 +51,30 @@ def refocus_shear_single(lf, alpha, clip_coords=True):
     return out
 
 
-def refocus_shear(lf, alphas, return_refocused_volumes=True, clip_coords=True):
+def refocus_shear(lf, alphas, clip_coords=True):
     """
     Refocus a light field over multiple alpha values.
+    Returns the full sheared volume for each alpha.
 
     Parameters
     ----------
     lf : ndarray (H, W, U, V, C)
     alphas : list or array of alpha values
-    return_refocused_volumes : bool
-        If True: return the whole stack (A, H, W, U, V, C)
-        If False: return only refocused central view (A, H, W, C)
     clip_coords : bool
 
     Returns
     -------
-    stack : ndarray
-        If return_refocused_volumes=True:
-            shape (A, H, W, U, V, C)
-        Else:
-            shape (A, H, W, C)
+    stack : ndarray, shape (A, H, W, U, V, C)
+        Sheared LF for each alpha
     (u0, v0) : int tuple
         center angular coordinates used for shearing
     """
     H, W, U, V, C = lf.shape
-    alphas = np.asarray(alphas)
-
     u0 = (U - 1) // 2
     v0 = (V - 1) // 2
 
-    if return_refocused_volumes:
-        stack = np.zeros((len(alphas), H, W, U, V, C), dtype=lf.dtype)
-        for i, alpha in enumerate(alphas):
-            stack[i] = refocus_shear_single(lf, alpha, clip_coords=clip_coords)
-        return stack, (u0, v0)
-
-    stack = np.zeros((len(alphas), H, W, C), dtype=lf.dtype)
+    stack = np.zeros((len(alphas), H, W, U, V, C), dtype=lf.dtype)
     for i, alpha in enumerate(alphas):
-        vol = refocus_shear_single(lf, alpha, clip_coords=clip_coords)
-        stack[i] = vol[:, :, u0, v0, :]
+        stack[i] = refocus_shear_single(lf, alpha, clip_coords=clip_coords)
+    
     return stack, (u0, v0)
