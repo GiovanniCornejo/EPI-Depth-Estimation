@@ -11,7 +11,6 @@ def load_hci_lightfield(scene_path, U=9, V=9):
         lf: numpy array of shape (H, W, U, V, C)
     """
     lf = None
-    views = []
 
     # Load all input_Cam### images
     files = sorted(glob(os.path.join(scene_path, "input_Cam*.png")))

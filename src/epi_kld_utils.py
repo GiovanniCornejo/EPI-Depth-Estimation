@@ -64,7 +64,7 @@ def split_window_two_sides(window):
     left_win : (h, w//2)
     right_win : (h, w//2)
     """
-    h, w = window.shape
+    _, w = window.shape
     mid = w // 2
     left = window[:, :mid]
     right = window[:, mid:]

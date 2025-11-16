@@ -13,7 +13,7 @@ def extract_horizontal_epi(lf, y, v):
     epi : numpy array of shape (W, U, C)
     """
     # lf[x, y, u, v, c] => we fix y, v and vary x, u
-    H, W, U, V, C = lf.shape
+    H, _, _, V, _ = lf.shape
     if y < 0 or y >= H:
         raise ValueError("Invalid y index")
     if v < 0 or v >= V:
@@ -39,7 +39,7 @@ def extract_vertical_epi(lf, x, u):
     -------
     epi : numpy array of shape (H, V, C)
     """
-    H, W, U, V, C = lf.shape
+    _, W, U, _, _ = lf.shape
     if x < 0 or x >= W:
         raise ValueError("Invalid x index")
     if u < 0 or u >= U:
