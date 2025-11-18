@@ -16,18 +16,14 @@ def extract_central_sub_aperture(lf):
         The central sub-aperture image.
     """
     
-    # 1. Get the shape of the light field
-    H, W, U, V, C = lf.shape
+    # Get the shape of the light field
+    _, _, U, V, _ = lf.shape
     
-    # 2. Compute the central angular indices
-    # This assumes U and V are odd (e.g., 9x9), which is typical for HCI datasets.
-    # The integer division '//' correctly finds the center index (e.g., (9-1)//2 = 4).
-    u0 = (U - 1) // 2  # center horizontal angular index
-    v0 = (V - 1) // 2  # center vertical angular index
-    
-    # 3. Extract the slice at the central indices
-    # We use slicing [:, :, u0, v0, :] to select all spatial pixels and channels 
-    # for the specific central (u0, v0) view, dropping the U and V dimensions.
+    # Compute central angular indices
+    u0 = (U - 1) // 2  # Center horizontal angular index
+    v0 = (V - 1) // 2  # Center vertical angular index
+
+    # Extract the slice at central indices
     central_view = lf[:, :, u0, v0, :]
     
     return central_view
