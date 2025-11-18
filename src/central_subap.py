@@ -31,10 +31,3 @@ def extract_central_sub_aperture(lf):
     central_view = lf[:, :, u0, v0, :]
     
     return central_view
-
-# Example usage (assuming 'lf' is a loaded light field):
-# import lightfield_io # assuming it's in the same directory
-# scene_path = "path/to/lightfield/scene"
-# lf = lightfield_io.load_hci_lightfield(scene_path)
-# central_image = extract_central_sub_aperture(lf)
-# print(central_image.shape)
