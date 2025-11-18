@@ -19,6 +19,14 @@ def load_hci_lightfield(scene_path, U=9, V=9):
     lf : numpy.ndarray, shape (H, W, U, V, C)
         4D light field volume where H,W = spatial dimensions, 
         U,V = angular dimensions, C = number of channels (typically 3 for RGB)
+
+    Notes
+    -----
+    - The function expects images to be named in the format 'input_CamXX.png'.
+    - Images should be normalized to [0, 1].
+    - For U,V = (9,9), there should be 81 images in total.
+        - input_Cam00.png corresponds to the top-left view (u=0,v=0).
+        - input_Cam80.png corresponds to the bottom-right view (u=8,v=8).
     """
 
     # Get images from the scene folder
